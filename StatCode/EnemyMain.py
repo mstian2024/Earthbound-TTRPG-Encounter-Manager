@@ -12,7 +12,7 @@ class main(QMainWindow):
         self.statManager = StatManager()
         self.statManager.show()
         self.setWindowTitle("Enemy Stat Manager")
-        self.setMinimumSize(QSize(400, 300))
+        self.setMinimumSize(QSize(500,500))
         # Set the central widget of the Window.
         self.label = QLabel("Please input in a file.", self)
         self.widgetStack = QStackedWidget()

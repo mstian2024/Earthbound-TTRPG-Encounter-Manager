@@ -1,0 +1,23 @@
+{
+    "1": {
+        "name": "",
+        "description": "",
+        "HP": 1,
+        "PP": 1,
+        "OFF": 1,
+        "DEF": 1,
+        "IQ": 1,
+        "SPD": 1,
+        "FireRes": 1,
+        "IceRes": 1,
+        "ElecRes": 1,
+        "BombRes": 1,
+        "ParaRes": 2,
+        "CryRes": 2,
+        "BraRes": 2,
+        "SleRes": 2,
+        "PoiRes": 2,
+        "WalRes": 2,
+        "SolRes": 2
+    }
+}
