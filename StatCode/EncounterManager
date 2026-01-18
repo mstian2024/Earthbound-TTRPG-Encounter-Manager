@@ -1,23 +1,10 @@
 import json
-from tkinter import *
+from PyQt6.QtWidgets import *
 class EncounterManager():
    data = {}
    encounter = []
    def __init__(self, root, frame):
-    try: 
-      with open('EnemyData\Enemystats.json','r') as file:
-        self.data = json.load(file)
-      print("Stats loaded from Database!")
-    except FileNotFoundError:
-      print ('Error: The file was not found, Please try again.')
-      return
-    self.root = root
-    self.frame = frame
-    btn = Button(self.frame, text="Change Encounter", command=self.changeEncounter)
-    btn.grid(row=2, column=0, padx=10, pady=2)
-    Label(self.frame, text="Instructions:").grid(row=0, column=0, padx=10, pady=2)
-    self.instruct = Label(self.frame, text="1\n2\n2\n3\n4\n5\n6\n7\n8\n9\n")
-    self.instruct.grid(row=1, column=0, padx=10, pady=2)
+     data = {}
 
    def printData(self):
      print("data is : ",self.data)

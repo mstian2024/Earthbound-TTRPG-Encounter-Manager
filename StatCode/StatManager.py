@@ -1,46 +1,41 @@
 import json
-from tkinter import *
-class StatManager():
-   data = {}
+from PyQt6.QtCore import *
+from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtWidgets import *
+class StatManager(QWidget):
+   loadedData = {}
    encounter = []
-   def __init__(self, root, frame):
-    try: 
-      with open('EnemyData\Enemystats.json','r') as file:
-        self.data = json.load(file)
-      print("Stats loaded from Database!")
-    except FileNotFoundError:
-      print ('Error: The file was not found, Please try again.')
-      return
-    self.root = root
-    self.frame = frame
-    btn = Button(self.frame, text="Change Encounter", command=self.changeEncounter)
-    btn.grid(row=2, column=0, padx=10, pady=2)
-    Label(self.frame, text="Instructions:").grid(row=0, column=0, padx=10, pady=2)
-    self.instruct = Label(self.frame, text="1\n2\n2\n3\n4\n5\n6\n7\n8\n9\n")
-    self.instruct.grid(row=1, column=0, padx=10, pady=2)
+   def __init__(self):
+      super().__init__()
+      self.title = "Stat Manager"
+      button = QPushButton("Press Me!")
+      button.clicked.connect(self.inputStat)
+      #set layout
+      layout = QVFormLayout()
+      #input to get name 
+      layout.addWidget(button)
+      self.setLayout(layout)
+      #add all rows to form
 
-   def printData(self):
-     print("data is : ",self.data)
-   
-   def inputStat(self, root):
-      root.configure(bg="light green")
-      root.title("Simple Calculator")
-      root.geometry("270x150")
+   def getFileData(self,filePath):
+      #add way to check if file is formatted correctly.
+      try: 
+        with open(filePath,'r', encoding='utf-8') as file:
+          if filePath.endswith('.json'):
+            self.loadedData = json.load(file)
+            print("Stats loaded from Database!")
+            return self.loadedData
+          else:
+            print ('Error: The file is not a .json file, Please try again.')
+            return
+      except FileNotFoundError:
+        print ('Error: The file was not found, Please try again.')
+        return
+      except json.JSONDecodeError:
+        # Handle cases where the JSON in the file is invalid
+        print(f"Error decoding JSON from file: {filePath}")
+        return
 
-      display = StringVar()
-      entry = Entry(root, textvariable=display)
-      entry.grid(columnspan=4, ipadx=70)
-
-    # Number buttons
-      btn1 = Button(root, text='1', fg='black', bg='red', command=lambda: press(1), height=1, width=7)
-      root.mainloop()
-
-   
-   def changeEncounter(self):
-     print('encounter menu')
+   def inputStat(self):
+      print("Input Stat Function")
     
-   def seeEncounter(self):
-     print(self.encounter)
-    
-   def changeHPValues(self):
-      print('change HP values menu')

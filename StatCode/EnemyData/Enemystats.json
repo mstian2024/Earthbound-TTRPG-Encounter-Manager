@@ -1,0 +1,48 @@
+{
+    "1": {
+        "name": "TEST",
+        "HP": 1,
+        "PP": 1,
+        "OFF": 1,
+        "DEF": 1,
+        "IQ": 1,
+        "SPEED": 1,
+        "FireRes": 1,
+        "IceRes": 1,
+        "ElecRes": 1,
+        "BombRes": 1,
+        "FreRes": 1,
+        "ParaRes": 1,
+        "CryRes": 1,
+        "BraRes": 1,
+        "SleRes": 1,
+        "PoiRes": 1,
+        "WalRes": 1,
+        "MOVES": {
+            "Move Name": "move description sorry you need to do it yourself manually"
+        }
+    },
+    "2": {
+        "name": "TEST2",
+        "HP": 1,
+        "PP": 1,
+        "OFF": 1,
+        "DEF": 1,
+        "IQ": 1,
+        "SPEED": 1,
+        "FireRes": 1,
+        "IceRes": 1,
+        "ElecRes": 1,
+        "BombRes": 1,
+        "FreRes": 1,
+        "ParaRes": 1,
+        "CryRes": 1,
+        "BraRes": 1,
+        "SleRes": 1,
+        "PoiRes": 1,
+        "WalRes": 1,
+        "MOVES": {
+            "Move Name": "move description sorry you need to do it yourself manually"
+        }
+    }
+}
