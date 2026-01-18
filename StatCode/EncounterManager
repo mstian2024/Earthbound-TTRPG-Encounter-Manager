@@ -1,6 +1,6 @@
 import json
 from tkinter import *
-class StatManager():
+class EncounterManager():
    data = {}
    encounter = []
    def __init__(self, root, frame):
@@ -21,20 +21,6 @@ class StatManager():
 
    def printData(self):
      print("data is : ",self.data)
-   
-   def inputStat(self, root):
-      root.configure(bg="light green")
-      root.title("Simple Calculator")
-      root.geometry("270x150")
-
-      display = StringVar()
-      entry = Entry(root, textvariable=display)
-      entry.grid(columnspan=4, ipadx=70)
-
-    # Number buttons
-      btn1 = Button(root, text='1', fg='black', bg='red', command=lambda: press(1), height=1, width=7)
-      root.mainloop()
-
    
    def changeEncounter(self):
      print('encounter menu')
