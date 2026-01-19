@@ -26,9 +26,10 @@ class StatManager(QWidget):
       StatValues = ['HP' ,'PP','OFF','DEF','IQ','SPD']
       ElemRes = ['Fire','Ice','Elec','Bomb']
       Ailments = ['Paralysis','Crying','Sleep','Poison','Strange','Wall Staples', 'Solidification']
-      self.instructions = QLabel("Input Monster Stats Below:\nAny blank fields will default to 1. \nelemental resistance is what the damage will be multiplied by.")
+      self.instructions = QLabel("Input Monster Stats Below:\nAny blank fields will default to 1. \nelemental resistance is what the damage will be multiplied by.\nNames are required.")
       #input to get name
-      
+      self.error = QLabel("")
+
       self.monName = QLineEdit()
       self.monName.setPlaceholderText("Enter Monster Name")
       self.monDesc = QLineEdit()
@@ -62,6 +63,7 @@ class StatManager(QWidget):
       #add all rows to form
 
       self.layout1.addRow(self.instructions)
+      self.layout1.addRow(self.error)
       self.layout1.addRow("Monster Name:",self.monName)
       self.layout1.addRow("Monster Description:",self.monDesc)
 
@@ -96,6 +98,10 @@ class StatManager(QWidget):
         return
 
    def inputStat(self):
+      if name := self.monName.text() == "":
+         print("Error: Name field is required.")
+         self.error.setText("Error: Name field is required.")
+         return
       name = self.monName.text()
       desc = self.monDesc.text()
       stats =[]
