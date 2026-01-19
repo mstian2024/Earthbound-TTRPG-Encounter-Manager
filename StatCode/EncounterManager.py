@@ -12,7 +12,9 @@ class EncounterManager(QWidget):
        self.afterLayout = QStackedWidget()
        button1 =QPushButton("Change Encounter")
        button1.clicked.connect(self.changeEncounter)
-       
+       simulate =QPushButton("Simulate Encounter")
+       simulate.clicked.connect(self.changeHPValues)
+
        label = QLabel("Please Load in JSON Data first.", alignment=Qt.AlignmentFlag.AlignCenter)
        button = QPushButton("test")
        self.beforeLayout.setLayout(QVBoxLayout())
@@ -20,7 +22,7 @@ class EncounterManager(QWidget):
        self.beforeLayout.layout().addWidget(button)
        self.afterLayout.setLayout(QVBoxLayout())
        self.afterLayout.layout().addWidget(button1)
-
+       self.afterLayout.layout().addWidget(simulate)
        self.encounterMaker = QWidget()
        self.enemyBox = QGridLayout()
        self.encounterMaker.setLayout(self.enemyBox)

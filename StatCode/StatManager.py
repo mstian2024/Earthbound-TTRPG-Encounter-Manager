@@ -108,12 +108,12 @@ class StatManager(QWidget):
       for i in range(6):
           widget = self.statLayout.itemAtPosition(1, i).widget()
           if isinstance(widget, QLineEdit):
-              stats.append(widget.text() if widget.text() else 1)
+              stats.append(int(widget.text()) if widget.text() else 1)
       elements =[]
       for i in range(4):
           widget = self.elementLayout.itemAtPosition(1, i).widget()
           if isinstance(widget, QLineEdit):
-              elements.append(widget.text() if widget.text() else 1)
+              elements.append(float(widget.text()) if widget.text() else 1.0)
       ailments =[]
       for i in range(7):
           widget = self.ailmentLayout.itemAtPosition(1, i).widget()
