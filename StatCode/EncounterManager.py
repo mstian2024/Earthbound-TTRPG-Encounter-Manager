@@ -1,6 +1,7 @@
-import json
-from PyQt6.QtCore import QSize, Qt
+
+from PyQt6.QtCore import  Qt
 from PyQt6.QtWidgets import QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel, QStackedLayout, QGridLayout, QListWidget
+from BattleManager import BattleManager
 class EncounterManager(QWidget):
    data = {}
    EnemyDb = {}
@@ -10,19 +11,20 @@ class EncounterManager(QWidget):
        self.tabLayout = QStackedLayout()
        self.beforeLayout = QWidget()
        self.afterLayout = QStackedWidget()
+       self.encScreen = QWidget()
        button1 =QPushButton("Change Encounter")
        button1.clicked.connect(self.changeEncounter)
+       self.battleManager = BattleManager()
        simulate =QPushButton("Simulate Encounter")
-       simulate.clicked.connect(self.changeHPValues)
+       simulate.clicked.connect(self.battleSim)
 
        label = QLabel("Please Load in JSON Data first.", alignment=Qt.AlignmentFlag.AlignCenter)
-       button = QPushButton("test")
        self.beforeLayout.setLayout(QVBoxLayout())
        self.beforeLayout.layout().addWidget(label)
-       self.beforeLayout.layout().addWidget(button)
-       self.afterLayout.setLayout(QVBoxLayout())
-       self.afterLayout.layout().addWidget(button1)
-       self.afterLayout.layout().addWidget(simulate)
+       self.encScreen.setLayout(QVBoxLayout())
+       self.encScreen.layout().addWidget(button1)
+       self.encScreen.layout().addWidget(simulate)
+       self.afterLayout.addWidget(self.encScreen)
        self.encounterMaker = QWidget()
        self.enemyBox = QGridLayout()
        self.encounterMaker.setLayout(self.enemyBox)
@@ -50,6 +52,7 @@ class EncounterManager(QWidget):
        self.tabLayout.addWidget(self.beforeLayout)
        self.tabLayout.addWidget(self.afterLayout)
        self.tabLayout.addWidget(self.encounterMaker)
+       self.tabLayout.addWidget(self.battleManager)
        self.tabLayout.setCurrentIndex(0)
        self.setLayout(self.tabLayout)
        self.data = {}
@@ -58,6 +61,7 @@ class EncounterManager(QWidget):
       if hasData:
          print('data loaded')
          self.data = hasData
+         print(self.afterLayout.indexOf(self.encScreen))
          self.tabLayout.setCurrentIndex(1)
          self.tabLayout.update()
          
@@ -86,12 +90,15 @@ class EncounterManager(QWidget):
       self.encounter.pop(enemyIndex)
       self.addedBox.takeItem(enemyIndex)
       print(self.encounter)
+
    def saveEncounter(self):
       self.tabLayout.setCurrentIndex(1)
+
    def exitEditor(self):
       self.tabLayout.setCurrentIndex(1)
       self.encounter = []
       self.addedBox.clear()
     
-   def changeHPValues(self):
-      print('change HP values menu')
+   def battleSim(self):
+      self.tabLayout.setCurrentIndex(3)
+      self.battleManager.importEncounter(self.encounter,self.data)

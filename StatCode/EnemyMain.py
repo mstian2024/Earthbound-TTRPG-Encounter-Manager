@@ -3,8 +3,8 @@ from StatManager import StatManager
 from EncounterManager import EncounterManager
 import os
 from PyQt6.QtCore import QSize, Qt
-from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtWidgets import QHBoxLayout, QFormLayout, QStackedWidget, QListWidget, QWidget, QLabel, QMainWindow, QApplication, QFileDialog
+from PyQt6.QtGui import QAction
+from PyQt6.QtWidgets import QHBoxLayout, QStackedWidget, QLabel, QMainWindow, QApplication, QFileDialog
 import sys
 # Defining main function
 class main(QMainWindow):

@@ -19,7 +19,8 @@
         "SleRes": 1,
         "PoiRes": 1,
         "WalRes": 1,
-        "SolRes": 1
+        "SolRes": 1,
+        "Status":"NORM"
     },
     "2": {
         "name": "TEST2",
@@ -41,10 +42,11 @@
         "SleRes": 1,
         "PoiRes": 1,
         "WalRes": 1,
-        "SolRes": 1
+        "SolRes": 1,
+        "Status":"NORM"
     },
     "3": {
-        "name": "qweqwe",
+        "name": "IMMWALCRYWEAK",
         "description": "qwe",
         "HP": 1,
         "PP": 123,
@@ -62,16 +64,17 @@
         "SleRes": 2,
         "PoiRes": 2,
         "WalRes": 0,
-        "SolRes": 2
+        "SolRes": 2,
+        "Status":"NORM"
     },
     "4": {
-        "name": "new",
+        "name": "POISTR",
         "description": "nwe",
         "HP": 1,
         "PP": 1,
         "OFF": 1,
         "DEF": 1,
-        "IQ": 1,
+        "IQ": 8,
         "SPD": 1,
         "FireRes": 1,
         "IceRes": 123,
@@ -81,9 +84,10 @@
         "CryRes": 2,
         "BraRes": 2,
         "SleRes": 2,
-        "PoiRes": 0,
+        "PoiRes": 1,
         "WalRes": 2,
-        "SolRes": 2
+        "SolRes": 2,
+        "Status":"NORM"
     },
     "5": {
         "name": "testeeeee",
@@ -104,7 +108,8 @@
         "SleRes": 2,
         "PoiRes": 2,
         "WalRes": 2,
-        "SolRes": 2
+        "SolRes": 2,
+        "Status":"NORM"
     },
     "6": {
         "name": "testeeeee34",
@@ -125,7 +130,8 @@
         "SleRes": 2,
         "PoiRes": 2,
         "WalRes": 2,
-        "SolRes": 2
+        "SolRes": 2,
+        "Status":"NORM"
     },
     "7": {
         "name": "asd11",
@@ -146,6 +152,7 @@
         "SleRes": 2,
         "PoiRes": 2,
         "WalRes": 2,
-        "SolRes": 2
+        "SolRes": 2,
+        "Status":"NORM"
     }
 }

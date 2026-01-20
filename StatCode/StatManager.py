@@ -1,6 +1,6 @@
 import json
-from PyQt6.QtCore import QSize
-from PyQt6.QtGui import QAction, QIcon , QIntValidator, QDoubleValidator
+
+from PyQt6.QtGui import  QIntValidator, QDoubleValidator
 from PyQt6.QtWidgets import  QWidget, QPushButton, QLineEdit, QVBoxLayout, QFormLayout, QGridLayout, QLabel, QComboBox ,QFileDialog
 import os
 
@@ -147,7 +147,8 @@ class StatManager(QWidget):
          "SleRes": ailments[2],
          "PoiRes": ailments[3],
          "WalRes": ailments[5],
-         "SolRes": ailments[6]
+         "SolRes": ailments[6],
+         "Status": "NORM"
       }
       print(outData)
       print("Input Stat Function")
