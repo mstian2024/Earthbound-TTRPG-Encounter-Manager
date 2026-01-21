@@ -69,17 +69,17 @@ class EncounterManager(QWidget):
    def changeEncounter(self):
      print('encounter menu')
      #TODO Move this to another window for convenience
-     if len(self.data.keys()) == self.enemyTabs.count():
+     if len(self.data.keys()) == self.enemyTabs.count(): # this is to make sure that you aren't duplicating entries
         self.tabLayout.setCurrentIndex(2)
         return
-     for key in self.data.keys():
+     for key in self.data.keys():#adding in the entries
         if self.data[key]['name'] in self.EnemyDb:
            continue
         self.enemyTabs.addItem(self.data[key]['name'])
         self.EnemyDb[self.data[key]['name']] = key
      self.tabLayout.setCurrentIndex(2)
 
-   def addToEncounter(self):
+   def addToEncounter(self):# add in entry to addedbox
      enemyName = self.enemyTabs.currentItem().text()
      self.encounter.append(self.EnemyDb[enemyName])
      self.addedBox.addItem(enemyName)
@@ -101,4 +101,6 @@ class EncounterManager(QWidget):
     
    def battleSim(self):
       self.tabLayout.setCurrentIndex(3)
-      self.battleManager.importEncounter(self.encounter,self.data)
+      enc = self.encounter.copy()
+      dat = self.data
+      self.battleManager.importEncounter(enc,dat)

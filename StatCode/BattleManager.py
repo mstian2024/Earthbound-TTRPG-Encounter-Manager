@@ -1,15 +1,16 @@
 from PyQt6.QtGui import  QIntValidator
 from PyQt6.QtCore import  Qt
-from PyQt6.QtWidgets import QWidget,  QVBoxLayout, QPushButton, QLabel, QGridLayout, QListWidget ,QLineEdit, QComboBox,QListWidgetItem
+from PyQt6.QtWidgets import QWidget,  QVBoxLayout, QPushButton, QLabel, QGridLayout, QListWidget ,QLineEdit, QComboBox,QListWidgetItem , QAbstractItemView
 class BattleManager(QWidget):
      encounterHP = []
      def __init__(self):
        super().__init__()
-       Ailments = ["Select Status","NORM",'PARA','CRY','SLEEP','POI','STRANGE','WSTPL', 'SOLID']
-       ElemRes = [ 'Select Element','Bash','Fire','Ice','Elec','Bomb']
+       self.Ailments = ["Select Status","NORM",'PARA','CRY','SLEEP','POI','STRANGE','WALSTPL', 'SOLID', "Def"]
+       self.ElemRes = [ 'Select Element','Bash','Fire','Ice','Elec','Bomb']
        self.mainWidget= QVBoxLayout()
 
        self.enemyBox = QListWidget()
+       self.enemyBox.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
        self.inputWidg = QWidget()
 
        self.inputs = QGridLayout()
@@ -27,9 +28,9 @@ class BattleManager(QWidget):
        self.nameInput = QLineEdit()
        self.nameInput.setPlaceholderText("Enter Player Name")
        self.elemInput = QComboBox()
-       self.elemInput.addItems(ElemRes)
+       self.elemInput.addItems(self.ElemRes)
        self.ailInput = QComboBox()
-       self.ailInput.addItems(Ailments)
+       self.ailInput.addItems(self.Ailments)
        
        self.addInitiativeBut = QPushButton("Add Initiative")
        self.addInitiativeBut.clicked.connect(self.addInit)
@@ -40,14 +41,18 @@ class BattleManager(QWidget):
        self.doDamageBut = QPushButton("Inflict Damage (-damage = healing)")
        self.doDamageBut.clicked.connect(self.doDamage)
        
+       self.errLabel = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
        self.setupLayout()
 
        self.inputWidg.setLayout(self.inputs)
+       
        self.mainWidget.addWidget(self.enemyBox)
        self.mainWidget.addWidget(self.inputWidg)
+       self.mainWidget.addWidget(self.errLabel)
        self.setLayout(self.mainWidget)
        
      def setupLayout(self):
+        #setups the layout for the input area.
         self.inputs.addWidget(self.results,0,0)
         self.inputs.addWidget(self.dmgInput,1,0)
         self.inputs.addWidget(self.elemInput,1,1)
@@ -61,24 +66,36 @@ class BattleManager(QWidget):
         self.inputs.addWidget(self.rollInitiativeBut,4,2)
 
      def importEncounter(self, encData, data):
-        self.encounterHp= [] 
+        #imports the enemy data to the places it needs
+        self.encounterHP = [] 
+        self.encounterList = encData
+        self.enemyBox.clear()
+        name_counts = {}
         if not encData:
-            label = QLabel("Please make or load an encounter First", alignment=Qt.AlignmentFlag.AlignCenter)
-            self.mainWidget.addWidget(label)
+
+            self.errLabel.setText("Please make or load an encounter First")
             return
-        
+
         for item in encData:
-            curEnemy = data[item]
+            curEnemy = data[item].copy()
             curEnemy['isDef'] = False
             curEnemy['MaxHP']= curEnemy['HP']
             curEnemy['MaxPP']= curEnemy['PP']
-            
+            #This is to give numbering to duplicate enemies in an encounter.
+            base_name = curEnemy['name']
+            if base_name in name_counts:
+                name_counts[base_name] += 1
+                display_name = f"{base_name} {name_counts[base_name]}"
+            else:
+                name_counts[base_name] = 1
+                display_name = base_name
+            curEnemy['display_name'] = display_name
+            #add in the grids to the enemylist since it looks preetier 
             self.encounterHP.append(curEnemy)
             listItem = QListWidgetItem()
             wrapperWidg = QWidget()
             gridLay = QGridLayout()
-            self.encounterHP.append(data[item])
-            gridLay.addWidget(QLabel(f"{curEnemy['name']}"), 0, 0)
+            gridLay.addWidget(QLabel(display_name), 0, 0)
             gridLay.addWidget(QLabel(f"HP"), 0, 1)
             gridLay.addWidget(QLabel(f"PP"), 0, 2)
             gridLay.addWidget(QLabel(f"Status"), 0, 3)
@@ -93,8 +110,49 @@ class BattleManager(QWidget):
         print(self.encounterHP)
 
      def doDamage(self):
+         #applies the damage formulas to enemies
          print("damageTime")
-         print(self.enemyBox.currentRow())
+         targets = ""
+         toDelete = []
+         for x in self.enemyBox.selectionModel().selectedRows():
+            index = x.row()
+            print("index "+f'{index}')
+            curitem = self.encounterHP[index]
+            damageCalc = int(self.dmgInput.text())
+            element = self.elemInput.currentText()
+            if element == "Bash":
+                damageCalc = (damageCalc - curitem['DEF'])
+                if(curitem["isDef"]):#defending calculations
+                    damageCalc = damageCalc // 2
+            elif element in self.ElemRes[2:]:#elemental attack calculations according to rules right now
+                damageCalc = int(damageCalc * curitem[f'{element}Res'])
+            if(int(self.dmgInput.text()) > 0 and damageCalc <= 0):
+                damageCalc = 1
+            targets+=f'{curitem["display_name"]}, '
+            self.encounterHP[index]["HP"] -= damageCalc
+            print(self.encounterHP[index]["HP"])
+            print(damageCalc)
+            if self.encounterHP[index]["HP"] <= 0:
+                #mark entries as delete for later since it causes issues during the loop.
+                toDelete.append(index)
+            else:
+                if(self.encounterHP[index]["HP"] >self.encounterHP[index]["MaxHP"]): 
+                    #make sure enemies can't go over their maxHP Value
+                    self.encounterHP[index]["HP"] =  self.encounterHP[index]["MaxHP"]
+                widget = self.enemyBox.itemWidget(self.enemyBox.item(index))
+                hp_label = widget.layout().itemAtPosition(1, 1).widget()
+                hp_label.setText(str(self.encounterHP[index]["HP"]))
+         #Reverse sort so bigger indexes are first to prevent further issues
+         toDelete.sort(reverse=True)
+         
+         for index in toDelete:
+             self.encounterList.pop(index)
+             self.encounterHP.pop(index)
+             self.enemyBox.takeItem(index)
+         self.results.setText(f'{targets.rstrip(", ")} took {damageCalc} damage!')
+
+             
+
      def doAilment(self):
          print("AilTime")
      def addInit(self):
