@@ -23,7 +23,7 @@ class StatManager(QWidget):
       self.elementLayout = QGridLayout()
       self.ailmentLayout = QGridLayout()
       resistances = ['NORMAL','WEAK','STRONG','IMMUNE']
-      StatValues = ['HP' ,'PP','OFF','DEF','IQ','SPD']
+      StatValues = ['HP' ,'PP','OFF','DEF','IQ','SPD','GUTS']
       ElemRes = ['Fire','Ice','Elec','Bomb']
       Ailments = ['Paralysis','Crying','Sleep','Poison','Strange','Wall Staples', 'Solidification']
       self.instructions = QLabel("Input Monster Stats Below:\nAny blank fields will default to 1. \nelemental resistance is what the damage will be multiplied by.\nNames are required.")
@@ -137,6 +137,7 @@ class StatManager(QWidget):
          "DEF": stats[3],
          "IQ": stats[4],
          "SPD": stats[5],
+         "GUT":stats[6],
          "FireRes": elements[0],
          "IceRes": elements[1],
          "ElecRes": elements[2],
