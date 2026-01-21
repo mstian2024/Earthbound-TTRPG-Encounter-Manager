@@ -1,9 +1,10 @@
 from PyQt6.QtGui import  QIntValidator
 import random
 from PyQt6.QtCore import  Qt
-from PyQt6.QtWidgets import QWidget,  QVBoxLayout, QPushButton, QLabel, QGridLayout, QListWidget ,QLineEdit, QComboBox,QListWidgetItem , QAbstractItemView
+from PyQt6.QtWidgets import QWidget,  QVBoxLayout, QPushButton, QLabel, QGridLayout, QListWidget ,QLineEdit, QComboBox,QListWidgetItem , QAbstractItemView, QDialog, QVBoxLayout , QPushButton 
 class BattleManager(QWidget):
      encounterHP = []
+     initGuide = {}
      def __init__(self):
        super().__init__()
        self.Ailments = ["Select Status","Norm",'Paralysis','Crying','Sleep','Poison','Strange','Wall Stapled', 'Solidification', "Def", "NotDef"]
@@ -32,7 +33,9 @@ class BattleManager(QWidget):
        self.elemInput.addItems(self.ElemRes)
        self.ailInput = QComboBox()
        self.ailInput.addItems(self.Ailments)
-       
+       self.enemyIdInput = QLineEdit()
+       self.initInput.setValidator(QIntValidator())
+
        self.addInitiativeBut = QPushButton("Add Initiative")
        self.addInitiativeBut.clicked.connect(self.addInit)
        self.rollInitiativeBut = QPushButton("Roll Initiative")
@@ -41,7 +44,11 @@ class BattleManager(QWidget):
        self.addStatus.clicked.connect(self.doAilment)
        self.doDamageBut = QPushButton("Inflict Damage (-damage = healing)")
        self.doDamageBut.clicked.connect(self.doDamage)
-       
+       self.addEnemyBut = QPushButton("Add Enemy")
+       self.addEnemyBut.clicked.connect(self.addEnemyToEncounter)
+       self.clearInitBut =  QPushButton("Clear Init")
+       self.clearInitBut.clicked.connect(self.clearInit)
+
        self.errLabel = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
        self.setupLayout()
 
@@ -63,55 +70,62 @@ class BattleManager(QWidget):
         self.inputs.addWidget(self.addStatus,2,2)
         self.inputs.addWidget(self.initResult,3,0)
         self.inputs.addWidget(self.initInput,4,0)
-        self.inputs.addWidget(self.addInitiativeBut,4,1)
-        self.inputs.addWidget(self.rollInitiativeBut,4,2)
+        self.inputs.addWidget(self.nameInput,4,1)
+        self.inputs.addWidget(self.addInitiativeBut,4,2)
+        self.inputs.addWidget(self.rollInitiativeBut,4,3)
+        self.inputs.addWidget(self.clearInitBut,4,4)
+        self.inputs.addWidget(self.enemyIdInput,5,0)
+        self.inputs.addWidget(self.addEnemyBut,5,1)
+        
 
      def importEncounter(self, encData, data):
-        #imports the enemy data to the places it needs
+        self.data = data
         self.encounterHP = [] 
         self.encounterList = encData
         self.enemyBox.clear()
-        name_counts = {}
-        if not encData:
+        self.name_counts = {}
+        if not self.encounterList:
 
             self.errLabel.setText("Please make or load an encounter First")
             return
 
-        for item in encData:
-            curEnemy = data[item].copy()
-            curEnemy['isDef'] = False
-            curEnemy['MaxHP']= curEnemy['HP']
-            curEnemy['MaxPP']= curEnemy['PP']
-            #This is to give numbering to duplicate enemies in an encounter.
-            base_name = curEnemy['name']
-            if base_name in name_counts:
-                name_counts[base_name] += 1
-                display_name = f"{base_name} {name_counts[base_name]}"
-            else:
-                name_counts[base_name] = 1
-                display_name = base_name
-            curEnemy['display_name'] = display_name
-            #add in the grids to the enemylist since it looks preetier 
-            self.encounterHP.append(curEnemy)
-            listItem = QListWidgetItem()
-            wrapperWidg = QWidget()
-            gridLay = QGridLayout()
-            gridLay.addWidget(QLabel(display_name), 0, 0)
-            gridLay.addWidget(QLabel(f"HP"), 0, 1)
-            gridLay.addWidget(QLabel(f"PP"), 0, 2)
-            gridLay.addWidget(QLabel(f"Hit/Dodge"), 0, 3)
-            gridLay.addWidget(QLabel(f"SMASH"), 0, 5)
-            gridLay.addWidget(QLabel(f"Status"), 0, 4)
-            gridLay.addWidget(QLabel(f"{curEnemy['HP']}"),1,1)
-            gridLay.addWidget(QLabel(f"{curEnemy['PP']}"),1,2)
-            gridLay.addWidget(QLabel(f"{curEnemy['SPD']//13}"),1,3)
-            gridLay.addWidget(QLabel(f"{curEnemy['Status']}"),1,4)
-            gridLay.addWidget(QLabel(f"{curEnemy['GUT']}"),1,5)
-            wrapperWidg.setLayout(gridLay)
-            listItem.setSizeHint(wrapperWidg.layout().sizeHint())
-            self.enemyBox.addItem(listItem)
-            self.enemyBox.setItemWidget(listItem,wrapperWidg)
+        for item in self.encounterList:
+            self.populateList(item)
 
+     def populateList(self, item):
+        curEnemy = self.data[item].copy()
+        curEnemy['isDef'] = False
+        curEnemy['MaxHP']= curEnemy['HP']
+        curEnemy['MaxPP']= curEnemy['PP']
+        #This is to give numbering to duplicate enemies in an encounter.
+        base_name = curEnemy['name']
+        if base_name in self.name_counts:
+            self.name_counts[base_name] += 1
+            display_name = f"{base_name} {self.name_counts[base_name]}"
+        else:
+            self.name_counts[base_name] = 1
+            display_name = base_name
+        curEnemy['display_name'] = display_name
+        #add in the grids to the enemylist since it looks preetier 
+        self.encounterHP.append(curEnemy)
+        listItem = QListWidgetItem()
+        wrapperWidg = QWidget()
+        gridLay = QGridLayout()
+        gridLay.addWidget(QLabel(display_name), 0, 0)
+        gridLay.addWidget(QLabel(f"HP"), 0, 1)
+        gridLay.addWidget(QLabel(f"PP"), 0, 2)
+        gridLay.addWidget(QLabel(f"Hit/Dodge"), 0, 3)
+        gridLay.addWidget(QLabel(f"SMASH"), 0, 5)
+        gridLay.addWidget(QLabel(f"Status"), 0, 4)
+        gridLay.addWidget(QLabel(f"{curEnemy['HP']}"),1,1)
+        gridLay.addWidget(QLabel(f"{curEnemy['PP']}"),1,2)
+        gridLay.addWidget(QLabel(f"{curEnemy['SPD']//13}"),1,3)
+        gridLay.addWidget(QLabel(f"{curEnemy['Status']}"),1,4)
+        gridLay.addWidget(QLabel(f"{curEnemy['GUT']}"),1,5)
+        wrapperWidg.setLayout(gridLay)
+        listItem.setSizeHint(wrapperWidg.layout().sizeHint())
+        self.enemyBox.addItem(listItem)
+        self.enemyBox.setItemWidget(listItem,wrapperWidg)
         print(self.encounterHP)
 
      def doDamage(self):
@@ -229,6 +243,26 @@ class BattleManager(QWidget):
          return total
 
      def addInit(self):
-         print("addInit")
-     def rollInitiative(self): 
-         print("rolling")       
+         init = 0
+         if self.initInput.text():
+             init = int ( self.initInput.text())
+         self.initGuide[f'{self.nameInput.text()}']  = init
+
+     def rollInitiative(self):
+         outcome = ""
+         for item in self.encounterHP:
+             self.initGuide[ item['display_name']] = (self.rollDie(1,20)+(item['SPD']//2))
+         sorted_items = sorted(self.initGuide.items(), key=lambda x: x[1], reverse=True)
+         print(self.initGuide)
+         for index, (name, init_val) in enumerate(sorted_items, 1):
+             outcome += f'{index}. {name}\n'
+         self.initResult.setText(outcome)
+
+     def clearInit(self):
+         
+         self.initGuide={}
+         self.initResult.setText("")
+
+     def addEnemyToEncounter(self):
+         if(self.enemyIdInput.text()):
+             self.populateList(self.enemyIdInput.text())
